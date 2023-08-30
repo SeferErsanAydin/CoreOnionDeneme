@@ -1,0 +1,50 @@
+Project.ENTITIES katmanı:
+
+*Microsoft.AspNetCore.Identity => Identity işlemleri için indirilen bir kütüphanedir. Burada kesinlikle Core olmayan bir Identity Package referans alınmamalıdır. (Identity işlemleri -> kullanıcı ekleme, login işlemi, singin işlemi, şifremi unuttum, mail gönderme vs.)
+
+*Microsoft.Extensions.Identity.Stores => NetCore MVC'den ve EF'ten bağımsız bir katmanda Core Identity yapısı kullanılacaksa Identity kütüphanesinin yanında Stores kütüphanesinin de indirilmesi gereklidir.
+
+-----------------------------------------------------------------------------
+
+Project.MAP katmanı(Project.ENTITIES katmanında referans alır):
+
+*Microsoft.EntityFrameworkCore => EF işlemlerinin temeli bu kütüphaneden başlar.(IEntitiyTypeConfiguration Interface'i bu kütüphanededir).
+
+*Microsoft.EntityFrameworkCore.SqlServer => Core'de IEntityTypeConfiguration Interface'i içerisinde SQLServer için HasColumName ve benzeri metotların gelebilmesi için gereklidir.
+
+-----------------------------------------------------------------------------
+
+Project.DAL katmanı(Project.MAP katmanından referans alır dolayısıyla zincirleme olarak Core platformunda MAP'ın içindeki Project.ENTITIES de referanc geleceği için Project.ENTITIES'den referans almak zorunda kalınmayacaktır):
+
+*Microsoft.EntityFrameworkCore => İhtiyacı vardır ama zaten Project.MAP'ten gelmektedir.
+*Microsoft.EntityFrameworkCore.SqlServer => İhtiyacı vardır ama Project.MAP'ten gelmektedir.
+*Microsoft.EntityFrameworkCore.Tools => Migration işlemlerini terminalden yapmak için Tools kütüphanesine ihtiyaç duyulur.
+*Microsoft.EntityFrameworkCore.Proxies => LazyLoading ayarlamaları yapabilmek için gereklidir.
+*Microsoft.AspNetCore.Identity.EntityFrameworkCore => Artık Identity kullandığımız için burada MyContext classımız DbContext sınıfından değil IdentityDbContext class'ından miras alacaktır. O class bu kütüphanede bulunmaktadır.
+
+-----------------------------------------------------------------------------
+
+Project.COMMON katmanı:
+
+SessionExtension sınıfı için. Bu katman .Net Standard Class Library'sindendir. Bu yüzden diğer Project katmanlardaki gibi SessionExtension için kütüphaneler otomatik olarak gelmez.
+
+*Microsoft.AspNetCore.HTTP.Feature => ISession tipini kullanmamızı sağlar.
+*Microsoft.AspNetCore.HTTP.Extensions => Common katmanında ISession tipinin SetString ve GetString extension metotlarına ulaşabilmemizi sağlar
+*Newtonsoft.JSON => JSON Serialize ve Deserialize işlemleri için indirilir.
+
+-----------------------------------------------------------------------------
+
+Project.BLL katmanı(Project.DAL'dan referans alır):
+
+*Microsoft.EntityFrameworkCore => Project.DAL'dan gelmektedir. Service injection options ayarları için gereklidir.
+*Microsoft.EntityFrameworkCore.SqlServer => Project.DAL'dan gelmektedir. Servise Inject yapılırken Options'ın UseSqlServer metodunu kullanması gerekir o yüzden ihtiyacı vardır.
+*Microsoft.AspNetCore.Identity => Zincirleme olarak Project.ENTITIES katmanından gelir. Identity servislerini inject etmek için (Dependency Injection'a bildirmek için) ihtiyacımız vardır.
+*System.Configuration.ConfigurationManager => Mevcut çalışan projenin configuration'ına başka katmanlardan ulaşabilmek için gereklidir.
+
+-----------------------------------------------------------------------------
+
+Project.COREUI katmanı(Project.BLL'den ve Project.COMMON'dan referans alır)
+
+*Microsoft.EntityFrameworkCore => Zincirleme referans olarak gelir.
+*Microsoft.EntityFrameworkCore.SqlServer => Zincirleme referans olarak gelir.
+*Microsoft.EntityFrameworkCore.Design => Migration için Tools kütüphanesini Project.DAL'de ekleyerek ayrı bir katmanda terminal işlemleri yaptığımızdan dolayı o Tools'a destek verebilmesi için Project.COREUI'a bu Design kütüphanesinin indirilmesi gerekir.
