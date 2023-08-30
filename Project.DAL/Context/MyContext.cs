@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Project.DAL.Context
 {
-    //Kurulan veritabanı yapısında Identity kullanılacak ise DbContext'ten miras alamayız. Çünki Identity kendi tablolarını tamamen hazır bir yapı olarak sunabilmesi adına IdentityDbContext'ten miras almalıdır
+    //Kurulan veritabanı yapısında kullandığımız Microsoft.Identity librarysinden dolayı DbContext'ten miras alamayız. Çünki Identity kendi tablolarını tamamen hazır bir yapı olarak sunabilmesi adına IdentityDbContext'ten miras almalıdır
     public class MyContext:IdentityDbContext<AppUser,IdentityRole<int>,int>
     {
         public MyContext(DbContextOptions<MyContext> options) : base (options)
