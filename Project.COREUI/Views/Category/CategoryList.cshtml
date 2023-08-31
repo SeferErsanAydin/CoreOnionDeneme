@@ -1,0 +1,42 @@
+﻿@model CategoryVM
+@{
+    ViewData["Title"] = "CategoryList";
+}
+
+@TempData["message"]
+<hr />
+@if (Model.Categories.Count==0)
+{
+    <div>
+        There are no Categories added yet. To add a category please <a asp-action="AddCategory" asp-controller="Category">click</a>
+    </div>
+}
+else
+{
+    <button class="btn btn-primary" asp-action="AddCategory" asp-controller="Category" >Add Category</button>
+
+    <div class="card card-header">
+        <div class="card card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Category Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Category item in Model.Categories)
+                    {
+                        <tr>
+                            <td>@item.CategoryName</td>
+                            <td>@item.Description</td>
+                            <td><a asp-controller="Category" asp-action="UpdateCategory" asp-route-id="@item.ID">Update</a></td>
+                            <td><a asp-controller="Category" asp-action="DeleteCategory" asp-route-id="@item.ID">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
