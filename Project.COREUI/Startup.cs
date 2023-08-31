@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Project.BLL.ServiceInjections;
 
 namespace Project.COREUI
 {
@@ -24,6 +25,13 @@ namespace Project.COREUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //Manual Extension yarattığımızda kullanacagımız tiplerin içerisindeki metotları tetiklemek
+            //using Project.BLL.ServiceInjections; ı eklememiz lazım bir süre görünmeyebiliyor.
+
+            services.AddDbContextService();
+            services.AddRepManServices();
+            services.AddIdentityService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +47,9 @@ namespace Project.COREUI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

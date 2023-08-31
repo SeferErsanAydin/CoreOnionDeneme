@@ -17,6 +17,7 @@ namespace Project.BLL.ManagerServices.Concretes
             _cRep = cRep;
         }
 
+        //Sadece Category sınıfı için çalışan Ornek Add() metodu
         public override string Add(Category item)
         {
             if (item.CategoryName != null)

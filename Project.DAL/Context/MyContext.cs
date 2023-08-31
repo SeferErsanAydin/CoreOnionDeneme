@@ -18,6 +18,7 @@ namespace Project.DAL.Context
         {
             
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new AppUserConfiguration());
